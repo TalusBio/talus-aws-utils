@@ -132,7 +132,14 @@ def tests(session: Session) -> None:
     """Run the test suite."""
     session.install("--upgrade", "pip")
     session.install(".")
-    session.install("coverage[toml]", "pytest", "pygments", "moto", "boto3-stubs[s3]", "data-science-types")
+    session.install(
+        "coverage[toml]",
+        "pytest",
+        "pygments",
+        "moto",
+        "boto3-stubs[s3]",
+        "data-science-types",
+    )
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
     finally:
@@ -158,7 +165,14 @@ def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     session.install("--upgrade", "pip")
     session.install(".")
-    session.install("pytest", "typeguard", "pygments", "moto", "boto3-stubs[s3]", "data-science-types")
+    session.install(
+        "pytest",
+        "typeguard",
+        "pygments",
+        "moto",
+        "boto3-stubs[s3]",
+        "data-science-types",
+    )
     session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
 

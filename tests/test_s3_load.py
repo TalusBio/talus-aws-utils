@@ -2,21 +2,18 @@
 import json
 import os
 from pathlib import Path
-from unittest import TestCase
 from typing import Iterable
+from unittest import TestCase
 
-import boto3
 import pandas as pd
 import pytest
 from mypy_boto3_s3.service_resource import Bucket
 
-from talus_aws_utils.s3 import (
-    file_exists_in_bucket,
-    file_keys_in_bucket,
-    file_size,
-    read_dataframe,
-    read_json,
-)
+from talus_aws_utils.s3 import file_exists_in_bucket
+from talus_aws_utils.s3 import file_keys_in_bucket
+from talus_aws_utils.s3 import file_size
+from talus_aws_utils.s3 import read_dataframe
+from talus_aws_utils.s3 import read_json
 
 DATA_DIR = Path(__file__).resolve().parent.joinpath("data")
 
@@ -66,22 +63,22 @@ def loaded_bucket(bucket: Bucket) -> Iterable[Bucket]:
 
 def test_read_dataframe_incorrect_format(loaded_bucket: Bucket) -> None:
     """ Tests read_dataframe with an incorrect inputformat. """
-    expected_error = r"Invalid \(inferred\) inputformat. Use one of: parquet, txt, csv, tsv."
+    expected_error = (
+        r"Invalid \(inferred\) inputformat. Use one of: parquet, txt, csv, tsv."
+    )
     # inputformat given
     with pytest.raises(ValueError, match=expected_error):
         _ = read_dataframe(
-        bucket=loaded_bucket.name, key=PARQUET_FILE_KEY, inputformat=".elib"
-    )
+            bucket=loaded_bucket.name, key=PARQUET_FILE_KEY, inputformat=".elib"
+        )
 
 
 def test_read_dataframe_file_doesnt_exist(loaded_bucket: Bucket) -> None:
     """ Tests read_dataframe with a nonexisting file. """
     expected_error = r"File doesn't exist."
     with pytest.raises(ValueError, match=expected_error):
-        _ = read_dataframe(
-        bucket=loaded_bucket.name, key="random_file.elib"
-    )
-    
+        _ = read_dataframe(bucket=loaded_bucket.name, key="random_file.elib")
+
 
 def test_read_dataframe_parquet(loaded_bucket: Bucket) -> None:
     """ Tests read_dataframe for a parquet file. """

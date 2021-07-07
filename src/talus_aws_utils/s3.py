@@ -2,7 +2,11 @@
 import json
 import pathlib
 from io import BytesIO
-from typing import Dict, List, Optional, Any, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Union
 
 import boto3
 import pandas as pd
@@ -58,6 +62,7 @@ def _write_object(bucket: str, key: str, buffer: BytesIO) -> None:
     s3_client = _get_boto_session().client("s3")
     s3_client.put_object(Bucket=bucket, Key=key, Body=buffer.getvalue())
 
+
 def read_dataframe(
     bucket: str, key: str, inputformat: Optional[str] = None, **kwargs
 ) -> pd.DataFrame:
@@ -90,11 +95,16 @@ def read_dataframe(
         return pd.read_csv(data, sep="\t", **kwargs)
     else:
         raise ValueError(
-            f"Invalid (inferred) inputformat. Use one of: parquet, txt, csv, tsv."
+            "Invalid (inferred) inputformat. Use one of: parquet, txt, csv, tsv."
         )
 
+
 def write_dataframe(
-    dataframe: pd.DataFrame, bucket: str, key: str, outputformat: Optional[str] = None, **kwargs
+    dataframe: pd.DataFrame,
+    bucket: str,
+    key: str,
+    outputformat: Optional[str] = None,
+    **kwargs,
 ) -> None:
     """Writes a pandas dataframe to a given s3 bucket using the given key.
     An output format can be manually specified. Otherwise the
@@ -119,12 +129,13 @@ def write_dataframe(
     elif outputformat == "csv":
         dataframe.to_csv(buffer, index=False, **kwargs)
     elif outputformat == "tsv" or outputformat == "txt":
-        dataframe.to_csv(buffer, sep='\t', index=False, **kwargs)
+        dataframe.to_csv(buffer, sep="\t", index=False, **kwargs)
     else:
         raise ValueError(
-            f"Invalid (inferred) outputformat. Use one of: parquet, txt, csv, tsv."
+            "Invalid (inferred) outputformat. Use one of: parquet, txt, csv, tsv."
         )
     _write_object(bucket=bucket, key=key, buffer=buffer)
+
 
 def read_json(bucket: str, key: str) -> Any:
     """Reads a json object from a given s3 bucket and key.
@@ -138,6 +149,7 @@ def read_json(bucket: str, key: str) -> Any:
     """
     file_content = _read_object(bucket=bucket, key=key)
     return json.loads(file_content.read())
+
 
 def write_json(dict_obj: Dict[str, Any], bucket: str, key: str) -> None:
     """Write a Dict to S3 as a json file.
@@ -153,7 +165,9 @@ def write_json(dict_obj: Dict[str, Any], bucket: str, key: str) -> None:
     _write_object(bucket=bucket, key=key, buffer=buffer)
 
 
-def file_keys_in_bucket(bucket: str, key: str, file_type: str = "") -> List[Optional[str]]:
+def file_keys_in_bucket(
+    bucket: str, key: str, file_type: str = ""
+) -> List[Optional[str]]:
     """Gets all the file keys in a given bucket, return empty list if none exist.
 
     Args:

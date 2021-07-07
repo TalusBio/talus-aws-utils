@@ -1,9 +1,10 @@
+from typing import Any
+from typing import Iterable
+
 import boto3
 import pytest
 from moto import mock_s3
 from mypy_boto3_s3.service_resource import Bucket
-
-from typing import Any, Iterable
 
 
 @pytest.fixture
