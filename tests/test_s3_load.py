@@ -170,14 +170,14 @@ def test_file_exists_in_bucket(loaded_bucket: Bucket) -> None:
 
 def test_file_size(loaded_bucket: Bucket) -> None:
     """Tests file_size."""
-    size_expected = "628B"
-    raw_size_expected = "628"
+    size_expected = set(["627B", "628B", "629B"])
+    raw_size_expected = set(["627", "628", "629"])
     size_actual = file_size(bucket=loaded_bucket.name, key=CSV_FILE_KEY)
-    assert size_expected == size_actual
+    assert size_actual in size_expected
     raw_size_actual = file_size(
         bucket=loaded_bucket.name, key=CSV_FILE_KEY, raw_size=True
     )
-    assert raw_size_expected == raw_size_actual
+    assert raw_size_actual in raw_size_expected
 
 
 def test_file_size_nonexistent(loaded_bucket: Bucket) -> None:
