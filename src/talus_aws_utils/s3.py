@@ -73,11 +73,14 @@ def read_dataframe(
     Args:
         bucket (str): The S3 bucket to load from.
         key (str): The object key within the s3 bucket.
-        inputformat (Optional[str], optional): The target inputformat. Can be one of {parquet, txt, csv, tsv}. Defaults to None.
+        inputformat (Optional[str], optional): The target inputformat.
+                                               Can be one of {parquet, txt, csv, tsv}.
+                                               Defaults to None.
         kwargs (Dict, optional): Additional keyword arguments.
 
     Raises:
-        ValueError: If either an incorrect inputformat is given or inferred when None is given.
+        ValueError: If either an incorrect inputformat is given or inferred
+                    when None is given.
 
     Returns:
         pd.DataFrame: A pandas DataFrame.
@@ -114,11 +117,14 @@ def write_dataframe(
         dataframe (pd.DataFrame): The pandas DataFrame to write.
         bucket (str): The S3 bucket to write to.
         key (str): The object key within the s3 bucket to write to.
-        outputformat (Optional[str], optional): The target output format. Can be one of {parquet, txt, csv, tsv}. Defaults to None.
+        outputformat (Optional[str], optional): The target output format.
+                                                Can be one of {parquet, txt, csv, tsv}.
+                                                Defaults to None.
         kwargs (Dict, optional): Additional keyword arguments.
 
     Raises:
-        ValueError: If either an incorrect inputformat is given or inferred when None is given.
+        ValueError: If either an incorrect inputformat is given or inferred
+                    when None is given.
     """
     if not outputformat:
         outputformat = pathlib.Path(key).suffix[1:]
@@ -137,7 +143,7 @@ def write_dataframe(
     _write_object(bucket=bucket, key=key, buffer=buffer)
 
 
-def read_json(bucket: str, key: str) -> Any:
+def read_json(bucket: str, key: str) -> Union[Any, Dict]:
     """Reads a json object from a given s3 bucket and key.
 
     Args:
@@ -173,7 +179,8 @@ def file_keys_in_bucket(
     Args:
         bucket (str): The S3 bucket to load from.
         key (str): The object key within the s3 bucket.
-        file_type (str, optional): A specific file type we want to filter for. Defaults to "".
+        file_type (str): A specific file type we want
+                                   to filter for. Defaults to "".
 
     Returns:
         List[Optional[str]]: A List of S3 file keys.
@@ -192,6 +199,9 @@ def file_exists_in_bucket(bucket: str, key: str) -> bool:
         bucket (str): The S3 bucket to load from.
         key (str): The object key within the s3 bucket.
 
+    Raises:
+        ClientError: If boto3 fails to retrieve the file metadata.
+
     Returns:
         bool: True if the file key exists, False if it doesn't.
     """
@@ -203,7 +213,7 @@ def file_exists_in_bucket(bucket: str, key: str) -> bool:
         if e.response["Error"]["Code"] == "404":
             return False
         else:
-            raise
+            raise e
 
 
 def file_size(bucket: str, key: str, raw_size: bool = False) -> Union[str, Any]:
@@ -212,7 +222,8 @@ def file_size(bucket: str, key: str, raw_size: bool = False) -> Union[str, Any]:
     Args:
         bucket (str): The S3 bucket to load from.
         key (str): The object key within the s3 bucket.
-        raw_size (bool): If True, returns the raw content length. If False, returns a human-readable version e.g. 1KB.
+        raw_size (bool): If True, returns the raw content length.
+                         If False, returns a human-readable version e.g. 1KB.
 
     Raises:
         ValueError: If file doesn't exist.

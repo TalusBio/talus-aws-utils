@@ -28,7 +28,7 @@ with open(DATA_DIR.joinpath(JSON_FILE_KEY), "r") as f:
 
 
 def test_write_dataframe_incorrect_format(bucket: Bucket) -> None:
-    """ Tests write_dataframe with an incorrect outputformat. """
+    """Tests write_dataframe with an incorrect outputformat."""
     expected_error = (
         r"Invalid \(inferred\) outputformat. Use one of: parquet, txt, csv, tsv."
     )
@@ -43,7 +43,7 @@ def test_write_dataframe_incorrect_format(bucket: Bucket) -> None:
 
 
 def test_write_dataframe_parquet(bucket: Bucket) -> None:
-    """ Tests write_dataframe for a parquet file. """
+    """Tests write_dataframe for a parquet file."""
     # outputformat given
     write_dataframe(
         dataframe=PARQUET_EXPECTED,
@@ -65,7 +65,7 @@ def test_write_dataframe_parquet(bucket: Bucket) -> None:
 
 
 def test_write_dataframe_csv(bucket: Bucket) -> None:
-    """ Tests write_dataframe for a csv file. """
+    """Tests write_dataframe for a csv file."""
     # outputformat given
     write_dataframe(
         dataframe=CSV_EXPECTED, bucket=bucket.name, key=CSV_FILE_KEY, outputformat="csv"
@@ -82,7 +82,7 @@ def test_write_dataframe_csv(bucket: Bucket) -> None:
 
 
 def test_write_dataframe_tsv(bucket: Bucket) -> None:
-    """ Tests write_dataframe for a tsv file. """
+    """Tests write_dataframe for a tsv file."""
     # outputformat given
     write_dataframe(
         dataframe=TSV_EXPECTED, bucket=bucket.name, key=TSV_FILE_KEY, outputformat="tsv"
@@ -99,7 +99,7 @@ def test_write_dataframe_tsv(bucket: Bucket) -> None:
 
 
 def test_write_dataframe_txt(bucket: Bucket) -> None:
-    """ Tests write_dataframe for a txt file. """
+    """Tests write_dataframe for a txt file."""
     # outputformat given
     write_dataframe(
         dataframe=TXT_EXPECTED, bucket=bucket.name, key=TXT_FILE_KEY, outputformat="txt"
@@ -116,7 +116,7 @@ def test_write_dataframe_txt(bucket: Bucket) -> None:
 
 
 def test_write_json(bucket: Bucket) -> None:
-    """ Tests write_json. """
+    """Tests write_json."""
     write_json(dict_obj=JSON_EXPECTED, bucket=bucket.name, key=JSON_FILE_KEY)
     data_buffer = _read_object(bucket=bucket.name, key=JSON_FILE_KEY)
     json_actual = json.loads(data_buffer.read())

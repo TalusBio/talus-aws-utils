@@ -33,7 +33,7 @@ with open(DATA_DIR.joinpath(JSON_FILE_KEY), "r") as f:
 
 @pytest.fixture
 def loaded_bucket(bucket: Bucket) -> Iterable[Bucket]:
-    """ Fixture for a bucket with uploaded files. """
+    """Fixture for a bucket with uploaded files."""
     bucket.upload_file(
         Filename=os.path.join(DATA_DIR, PARQUET_FILE_KEY),
         Key=PARQUET_FILE_KEY,
@@ -62,7 +62,7 @@ def loaded_bucket(bucket: Bucket) -> Iterable[Bucket]:
 
 
 def test_read_dataframe_incorrect_format(loaded_bucket: Bucket) -> None:
-    """ Tests read_dataframe with an incorrect inputformat. """
+    """Tests read_dataframe with an incorrect inputformat."""
     expected_error = (
         r"Invalid \(inferred\) inputformat. Use one of: parquet, txt, csv, tsv."
     )
@@ -74,14 +74,14 @@ def test_read_dataframe_incorrect_format(loaded_bucket: Bucket) -> None:
 
 
 def test_read_dataframe_file_doesnt_exist(loaded_bucket: Bucket) -> None:
-    """ Tests read_dataframe with a nonexisting file. """
+    """Tests read_dataframe with a nonexisting file."""
     expected_error = r"File doesn't exist."
     with pytest.raises(ValueError, match=expected_error):
         _ = read_dataframe(bucket=loaded_bucket.name, key="random_file.elib")
 
 
 def test_read_dataframe_parquet(loaded_bucket: Bucket) -> None:
-    """ Tests read_dataframe for a parquet file. """
+    """Tests read_dataframe for a parquet file."""
     # inputformat given
     parquet_actual = read_dataframe(
         bucket=loaded_bucket.name, key=PARQUET_FILE_KEY, inputformat="parquet"
@@ -94,7 +94,7 @@ def test_read_dataframe_parquet(loaded_bucket: Bucket) -> None:
 
 
 def test_read_dataframe_csv(loaded_bucket: Bucket) -> None:
-    """ Tests read_dataframe for a csv file. """
+    """Tests read_dataframe for a csv file."""
     # inputformat given
     csv_actual = read_dataframe(
         bucket=loaded_bucket.name, key=CSV_FILE_KEY, inputformat="csv"
@@ -107,7 +107,7 @@ def test_read_dataframe_csv(loaded_bucket: Bucket) -> None:
 
 
 def test_read_dataframe_tsv(loaded_bucket: Bucket) -> None:
-    """ Tests read_dataframe for a tsv file. """
+    """Tests read_dataframe for a tsv file."""
     # inputformat given
     tsv_actual = read_dataframe(
         bucket=loaded_bucket.name, key=TSV_FILE_KEY, inputformat="tsv"
@@ -120,7 +120,7 @@ def test_read_dataframe_tsv(loaded_bucket: Bucket) -> None:
 
 
 def test_read_dataframe_txt(loaded_bucket: Bucket) -> None:
-    """ Tests read_dataframe for a txt file. """
+    """Tests read_dataframe for a txt file."""
     # inputformat given
     txt_actual = read_dataframe(
         bucket=loaded_bucket.name, key=TXT_FILE_KEY, inputformat="txt"
@@ -133,13 +133,13 @@ def test_read_dataframe_txt(loaded_bucket: Bucket) -> None:
 
 
 def test_read_json(loaded_bucket: Bucket) -> None:
-    """ Tests read_json. """
+    """Tests read_json."""
     json_actual = read_json(bucket=loaded_bucket.name, key=JSON_FILE_KEY)
     TestCase().assertDictEqual(JSON_EXPECTED, json_actual)
 
 
 def test_file_keys_in_bucket(loaded_bucket: Bucket) -> None:
-    """ Tests file_keys_in_bucket. """
+    """Tests file_keys_in_bucket."""
     file_keys_expected = [
         CSV_FILE_KEY,
         TSV_FILE_KEY,
@@ -153,7 +153,7 @@ def test_file_keys_in_bucket(loaded_bucket: Bucket) -> None:
 
 
 def test_file_keys_in_bucket_csv_only(loaded_bucket: Bucket) -> None:
-    """ Tests file_keys_in_bucket using the file_type filter. """
+    """Tests file_keys_in_bucket using the file_type filter."""
     file_keys_expected = [CSV_FILE_KEY]
     file_keys_actual = file_keys_in_bucket(
         bucket=loaded_bucket.name, key="", file_type="csv"
@@ -163,13 +163,13 @@ def test_file_keys_in_bucket_csv_only(loaded_bucket: Bucket) -> None:
 
 
 def test_file_exists_in_bucket(loaded_bucket: Bucket) -> None:
-    """ Tests file_exists_in_bucket. """
+    """Tests file_exists_in_bucket."""
     assert file_exists_in_bucket(bucket=loaded_bucket.name, key=CSV_FILE_KEY)
     assert not file_exists_in_bucket(bucket=loaded_bucket.name, key="random_file.csv")
 
 
 def test_file_size(loaded_bucket: Bucket) -> None:
-    """ Tests file_size. """
+    """Tests file_size."""
     size_expected = "628B"
     raw_size_expected = "628"
     size_actual = file_size(bucket=loaded_bucket.name, key=CSV_FILE_KEY)
@@ -181,6 +181,7 @@ def test_file_size(loaded_bucket: Bucket) -> None:
 
 
 def test_file_size_nonexistent(loaded_bucket: Bucket) -> None:
+    """Tests file_size where file doesn't exist."""
     expected_error = "File doesn't exist. Couldn't retrieve file size."
     with pytest.raises(ValueError, match=expected_error):
         _ = file_size(bucket=loaded_bucket.name, key="random_file.csv")

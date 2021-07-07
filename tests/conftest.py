@@ -1,3 +1,4 @@
+"""tests/conftest.py"""
 from typing import Any
 from typing import Iterable
 
@@ -9,15 +10,27 @@ from mypy_boto3_s3.service_resource import Bucket
 
 @pytest.fixture
 def env_vars(monkeypatch: Any) -> None:
+    """Monkeypatch Environment variables.
+
+    Args:
+        monkeypatch (Any): monkeypatch package
+    """
     monkeypatch.setenv("PROJECT_BUCKET", "test_bucket")
 
 
 @pytest.fixture
 def bucket() -> Iterable[Bucket]:
-    REGION = "us-west-2"
+    """Create a bucket fixture.
+
+    Returns:
+        Iterable[Bucket]: Bucket Fixture
+
+    Yields:
+        Iterator[Iterable[Bucket]]: Bucket Fixture
+    """
     with mock_s3():
         s3 = boto3.resource("s3")
         bucket = s3.Bucket("test_bucket")
-        bucket.create(CreateBucketConfiguration={"LocationConstraint": REGION})
+        bucket.create(CreateBucketConfiguration={"LocationConstraint": "us-west-2"})
 
         yield bucket
