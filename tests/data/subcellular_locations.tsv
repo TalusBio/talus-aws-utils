@@ -1,0 +1,6 @@
+Gene	Gene name	Reliability	Main location	Additional location	Extracellular location	Enhanced	Supported	Approved	Uncertain	Single-cell variation intensity	Single-cell variation spatial	Cell cycle dependency	GO id
+ENSG00000000003	TSPAN6	Approved	Cell Junctions;Cytosol	Nucleoli fibrillar center				Cell Junctions;Cytosol;Nucleoli fibrillar center		Cytosol			Cell Junctions (GO:0030054);Cytosol (GO:0005829);Nucleoli fibrillar center (GO:0001650)
+ENSG00000000457	SCYL3	Uncertain	Microtubules	Nuclear bodies					Microtubules;Nuclear bodies				Microtubules (GO:0015630);Nuclear bodies (GO:0016604)
+ENSG00000000460	C1orf112	Approved	Mitochondria					Mitochondria					Mitochondria (GO:0005739)
+ENSG00000000938	FGR	Approved	Plasma membrane	Aggresome				Aggresome;Plasma membrane					Aggresome (GO:0016235);Plasma membrane (GO:0005886)
+ENSG00000000971	CFH	Approved	Vesicles		Predicted to be secreted			Vesicles					Vesicles (GO:0043231)

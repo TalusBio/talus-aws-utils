@@ -1,0 +1,11 @@
+{
+  "_template": "https://github.com/TalusBio/cookiecutter-hypermodern-python",
+  "author": "Rico Meinl",
+  "email": "rmeinl@talus.bio",
+  "friendly_name": "Talus AWS Utils",
+  "github_user": "rmeinl",
+  "license": "MIT",
+  "package_name": "talus_aws_utils",
+  "project_name": "talus-aws-utils",
+  "version": "0.0.0"
+}
