@@ -1,6 +1,7 @@
 """Sphinx configuration."""
 from datetime import datetime
 
+
 project = "Talus AWS Utils"
 author = "Rico Meinl"
 copyright = f"{datetime.now().year}, {author}"

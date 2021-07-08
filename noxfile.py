@@ -6,6 +6,7 @@ from textwrap import dedent
 
 import nox
 
+
 try:
     from nox_poetry import Session, session
 except ImportError:

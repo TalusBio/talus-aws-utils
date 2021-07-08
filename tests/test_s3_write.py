@@ -11,6 +11,7 @@ from talus_aws_utils.s3 import _read_object
 from talus_aws_utils.s3 import write_dataframe
 from talus_aws_utils.s3 import write_json
 
+
 DATA_DIR = Path(__file__).resolve().parent.joinpath("data")
 
 PARQUET_FILE_KEY = "peptides_proteins_results.parquet"
