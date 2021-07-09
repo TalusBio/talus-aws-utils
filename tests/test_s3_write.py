@@ -1,18 +1,22 @@
 """Test cases for the s3 module."""
 import json
 import pickle
+
 from pathlib import Path
 from unittest import TestCase
 
 import numpy as np
 import pandas as pd
 import pytest
+
 from mypy_boto3_s3.service_resource import Bucket
 
-from talus_aws_utils.s3 import _read_object
-from talus_aws_utils.s3 import write_dataframe
-from talus_aws_utils.s3 import write_json
-from talus_aws_utils.s3 import write_numpy_array
+from talus_aws_utils.s3 import (
+    _read_object,
+    write_dataframe,
+    write_json,
+    write_numpy_array,
+)
 
 
 DATA_DIR = Path(__file__).resolve().parent.joinpath("data")

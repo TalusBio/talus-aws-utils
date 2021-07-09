@@ -1,6 +1,7 @@
 """Test cases for the s3 module."""
 import json
 import os
+
 from pathlib import Path
 from typing import Iterable
 from unittest import TestCase
@@ -8,14 +9,17 @@ from unittest import TestCase
 import numpy as np
 import pandas as pd
 import pytest
+
 from mypy_boto3_s3.service_resource import Bucket
 
-from talus_aws_utils.s3 import file_exists_in_bucket
-from talus_aws_utils.s3 import file_keys_in_bucket
-from talus_aws_utils.s3 import file_size
-from talus_aws_utils.s3 import read_dataframe
-from talus_aws_utils.s3 import read_json
-from talus_aws_utils.s3 import read_numpy_array
+from talus_aws_utils.s3 import (
+    file_exists_in_bucket,
+    file_keys_in_bucket,
+    file_size,
+    read_dataframe,
+    read_json,
+    read_numpy_array,
+)
 
 
 DATA_DIR = Path(__file__).resolve().parent.joinpath("data")

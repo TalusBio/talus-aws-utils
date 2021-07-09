@@ -1,9 +1,9 @@
 """tests/conftest.py"""
-from typing import Any
-from typing import Iterable
+from typing import Any, Iterable
 
 import boto3
 import pytest
+
 from moto import mock_s3
 from mypy_boto3_s3.service_resource import Bucket
 

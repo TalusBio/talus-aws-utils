@@ -2,16 +2,14 @@
 import json
 import pathlib
 import pickle
+
 from io import BytesIO
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Union
+from typing import Any, Dict, List, Optional, Union
 
 import boto3
 import numpy as np
 import pandas as pd
+
 from botocore.exceptions import ClientError
 from hurry.filesize import size
 
