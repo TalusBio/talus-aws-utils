@@ -1,8 +1,10 @@
 """Test cases for the s3 module."""
 import json
+import pickle
 from pathlib import Path
 from unittest import TestCase
 
+import numpy as np
 import pandas as pd
 import pytest
 from mypy_boto3_s3.service_resource import Bucket
@@ -10,6 +12,7 @@ from mypy_boto3_s3.service_resource import Bucket
 from talus_aws_utils.s3 import _read_object
 from talus_aws_utils.s3 import write_dataframe
 from talus_aws_utils.s3 import write_json
+from talus_aws_utils.s3 import write_numpy_array
 
 
 DATA_DIR = Path(__file__).resolve().parent.joinpath("data")
@@ -19,11 +22,13 @@ CSV_FILE_KEY = "peptides_proteins_results.csv"
 TSV_FILE_KEY = "subcellular_locations.tsv"
 TXT_FILE_KEY = "proteins.txt"
 JSON_FILE_KEY = "peptide_proteins.json"
+NP_ARRAY_FILE_KEY = "zeros_array.npy"
 
 PARQUET_EXPECTED = pd.read_parquet(DATA_DIR.joinpath(PARQUET_FILE_KEY))
 CSV_EXPECTED = pd.read_csv(DATA_DIR.joinpath(CSV_FILE_KEY))
 TSV_EXPECTED = pd.read_csv(DATA_DIR.joinpath(TSV_FILE_KEY), sep="\t")
 TXT_EXPECTED = pd.read_csv(DATA_DIR.joinpath(TXT_FILE_KEY), sep="\t")
+NP_ARRAY_EXPECTED = np.load(DATA_DIR.joinpath(NP_ARRAY_FILE_KEY))
 with open(DATA_DIR.joinpath(JSON_FILE_KEY), "r") as f:
     JSON_EXPECTED = json.load(f)
 
@@ -114,6 +119,16 @@ def test_write_dataframe_txt(bucket: Bucket) -> None:
     data_buffer = _read_object(bucket=bucket.name, key=TXT_FILE_KEY)
     txt_actual = pd.read_csv(data_buffer, sep="\t")
     pd.testing.assert_frame_equal(TXT_EXPECTED, txt_actual)
+
+
+def test_write_numpy_array(bucket: Bucket) -> None:
+    """Tests write_numpy_array."""
+    write_numpy_array(
+        array=NP_ARRAY_EXPECTED, bucket=bucket.name, key=NP_ARRAY_FILE_KEY
+    )
+    data = _read_object(bucket=bucket.name, key=NP_ARRAY_FILE_KEY)
+    np_array_actual = pickle.load(data)
+    np.testing.assert_equal(np_array_actual, NP_ARRAY_EXPECTED)
 
 
 def test_write_json(bucket: Bucket) -> None:

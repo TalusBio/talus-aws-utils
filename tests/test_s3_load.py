@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Iterable
 from unittest import TestCase
 
+import numpy as np
 import pandas as pd
 import pytest
 from mypy_boto3_s3.service_resource import Bucket
@@ -14,6 +15,7 @@ from talus_aws_utils.s3 import file_keys_in_bucket
 from talus_aws_utils.s3 import file_size
 from talus_aws_utils.s3 import read_dataframe
 from talus_aws_utils.s3 import read_json
+from talus_aws_utils.s3 import read_numpy_array
 
 
 DATA_DIR = Path(__file__).resolve().parent.joinpath("data")
@@ -23,11 +25,13 @@ CSV_FILE_KEY = "peptides_proteins_results.csv"
 TSV_FILE_KEY = "subcellular_locations.tsv"
 TXT_FILE_KEY = "proteins.txt"
 JSON_FILE_KEY = "peptide_proteins.json"
+NP_ARRAY_FILE_KEY = "zeros_array.npy"
 
 PARQUET_EXPECTED = pd.read_parquet(DATA_DIR.joinpath(PARQUET_FILE_KEY))
 CSV_EXPECTED = pd.read_csv(DATA_DIR.joinpath(CSV_FILE_KEY))
 TSV_EXPECTED = pd.read_csv(DATA_DIR.joinpath(TSV_FILE_KEY), sep="\t")
 TXT_EXPECTED = pd.read_csv(DATA_DIR.joinpath(TXT_FILE_KEY), sep="\t")
+NP_ARRAY_EXPECTED = np.load(DATA_DIR.joinpath(NP_ARRAY_FILE_KEY))
 with open(DATA_DIR.joinpath(JSON_FILE_KEY), "r") as f:
     JSON_EXPECTED = json.load(f)
 
@@ -58,6 +62,10 @@ def loaded_bucket(bucket: Bucket) -> Iterable[Bucket]:
     bucket.upload_file(
         Filename=os.path.join(DATA_DIR, JSON_FILE_KEY),
         Key=JSON_FILE_KEY,
+    )
+    bucket.upload_file(
+        Filename=os.path.join(DATA_DIR, NP_ARRAY_FILE_KEY),
+        Key=NP_ARRAY_FILE_KEY,
     )
     yield bucket
 
@@ -139,6 +147,12 @@ def test_read_json(loaded_bucket: Bucket) -> None:
     TestCase().assertDictEqual(JSON_EXPECTED, json_actual)
 
 
+def test_read_numpy_array(loaded_bucket: Bucket) -> None:
+    """Tests read_numpy_array."""
+    np_array_actual = read_numpy_array(bucket=loaded_bucket.name, key=NP_ARRAY_FILE_KEY)
+    np.testing.assert_equal(np_array_actual, NP_ARRAY_EXPECTED)
+
+
 def test_file_keys_in_bucket(loaded_bucket: Bucket) -> None:
     """Tests file_keys_in_bucket."""
     file_keys_expected = [
@@ -146,6 +160,7 @@ def test_file_keys_in_bucket(loaded_bucket: Bucket) -> None:
         TSV_FILE_KEY,
         PARQUET_FILE_KEY,
         JSON_FILE_KEY,
+        NP_ARRAY_FILE_KEY,
         TXT_FILE_KEY,
     ]
     file_keys_actual = file_keys_in_bucket(bucket=loaded_bucket.name, key="")

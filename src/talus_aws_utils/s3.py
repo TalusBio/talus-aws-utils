@@ -1,6 +1,7 @@
 """src/talus_aws_utils/s3.py"""
 import json
 import pathlib
+import pickle
 from io import BytesIO
 from typing import Any
 from typing import Dict
@@ -9,6 +10,7 @@ from typing import Optional
 from typing import Union
 
 import boto3
+import numpy as np
 import pandas as pd
 from botocore.exceptions import ClientError
 from hurry.filesize import size
@@ -140,6 +142,41 @@ def write_dataframe(
         raise ValueError(
             "Invalid (inferred) outputformat. Use one of: parquet, txt, csv, tsv."
         )
+    _write_object(bucket=bucket, key=key, buffer=buffer)
+
+
+def read_numpy_array(
+    bucket: str,
+    key: str,
+) -> np.array:
+    """Reads a numpy array from a given s3 bucket and key.
+
+    Args:
+        bucket (str): The S3 bucket to load from.
+        key (str): The object key within the s3 bucket.
+
+    Returns:
+        np.array: A numpy array.
+    """
+    data = _read_object(bucket=bucket, key=key)
+    return np.load(data, allow_pickle=True)
+
+
+def write_numpy_array(
+    array: np.array,
+    bucket: str,
+    key: str,
+) -> None:
+    """Writes a numpy array to a given s3 bucket using the given key.
+
+    Args:
+        array (np.array): The numpy array to write.
+        bucket (str): The S3 bucket to write to.
+        key (str): The object key within the s3 bucket to write to.
+    """
+    buffer = BytesIO()
+    pickle.dump(array, buffer)
+    buffer.seek(0)
     _write_object(bucket=bucket, key=key, buffer=buffer)
 
 
