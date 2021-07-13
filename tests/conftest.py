@@ -1,4 +1,4 @@
-"""tests/conftest.py"""
+"""tests/conftest.py module."""
 from typing import Any, Iterable
 
 import boto3
@@ -12,8 +12,11 @@ from mypy_boto3_s3.service_resource import Bucket
 def env_vars(monkeypatch: Any) -> None:
     """Monkeypatch Environment variables.
 
-    Args:
-        monkeypatch (Any): monkeypatch package
+    Parameters
+    ----------
+    monkeypatch : Any
+        monkeypatch package
+
     """
     monkeypatch.setenv("PROJECT_BUCKET", "test_bucket")
 
@@ -22,11 +25,11 @@ def env_vars(monkeypatch: Any) -> None:
 def bucket() -> Iterable[Bucket]:
     """Create a bucket fixture.
 
-    Returns:
-        Iterable[Bucket]: Bucket Fixture
+    Returns
+    -------
+    Iterable[Bucket]
+        Bucket Fixture
 
-    Yields:
-        Iterator[Iterable[Bucket]]: Bucket Fixture
     """
     with mock_s3():
         s3 = boto3.resource("s3")
