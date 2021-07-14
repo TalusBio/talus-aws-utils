@@ -1,4 +1,4 @@
-"""src/talus_aws_utils/lambda.py module."""
+"""src/talus_aws_utils/lambda_.py module."""
 import json
 
 from typing import Any, Dict
