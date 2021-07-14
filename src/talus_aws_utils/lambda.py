@@ -1,11 +1,11 @@
-"""src/talus_aws_utils/lambda.py"""
+"""src/talus_aws_utils/lambda.py module."""
 import json
 
 from typing import Any, Dict
 
 
-def error_msg_wrapper(msg: str) -> Dict[str:Any]:
-    """Wrap an error message in a JSON response
+def error_msg_wrapper(msg: str) -> Dict[str, Any]:
+    """Wrap an error message in a JSON response.
 
     Returns
     -------
@@ -23,8 +23,8 @@ def error_msg_wrapper(msg: str) -> Dict[str:Any]:
     }
 
 
-def success_msg_wrapper(msg: str) -> Dict[str:Any]:
-    """Wrap a success message in a JSON response
+def success_msg_wrapper(msg: str) -> Dict[str, Any]:
+    """Wrap a success message in a JSON response.
 
     Returns
     -------
