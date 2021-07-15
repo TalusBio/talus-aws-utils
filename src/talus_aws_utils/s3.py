@@ -7,24 +7,12 @@ from io import BytesIO
 from typing import Any, Dict, List, Optional, Union
 
 import boto3
+import joblib
 import numpy as np
 import pandas as pd
 
 from botocore.exceptions import ClientError
 from hurry.filesize import size
-
-
-def _get_boto_session() -> boto3.Session:
-    """Create and return an active boto3 session.
-
-    Returns
-    -------
-    boto3.Session
-        An active boto3 Session.
-
-    """
-    session = boto3.Session()
-    return session
 
 
 def _read_object(bucket: str, key: str) -> BytesIO:
@@ -48,7 +36,7 @@ def _read_object(bucket: str, key: str) -> BytesIO:
         If the file couldn't be found.
 
     """
-    s3_resource = _get_boto_session().resource("s3")
+    s3_resource = boto3.Session().resource("s3")
     s3_bucket = s3_resource.Bucket(bucket)
     data = BytesIO()
     try:
@@ -75,7 +63,7 @@ def _write_object(bucket: str, key: str, buffer: BytesIO) -> None:
         The BytesIO object containing the data to write.
 
     """
-    s3_client = _get_boto_session().client("s3")
+    s3_client = boto3.Session().client("s3")
     s3_client.put_object(Bucket=bucket, Key=key, Body=buffer.getvalue())
 
 
@@ -224,6 +212,52 @@ def write_numpy_array(
     _write_object(bucket=bucket, key=key, buffer=buffer)
 
 
+def read_joblib(
+    bucket: str,
+    key: str,
+) -> Any:
+    """Read a joblib model from a given s3 bucket and key.
+
+    Parameters
+    ----------
+    bucket : str
+        The S3 bucket to load from.
+    key : str
+        The object key within the s3 bucket.
+
+    Returns
+    -------
+    np.array
+        A joblib model.
+
+    """
+    data = _read_object(bucket=bucket, key=key)
+    return joblib.load(data)
+
+
+def write_joblib(
+    model: Any,
+    bucket: str,
+    key: str,
+) -> None:
+    """Write a joblib model to a given s3 bucket using the given key.
+
+    Parameters
+    ----------
+    array : np.array
+        The joblib model to write.
+    bucket : str
+        The S3 bucket to write to.
+    key : str
+        The object key within the s3 bucket to write to.
+
+    """
+    buffer = BytesIO()
+    joblib.dump(model, buffer)
+    buffer.seek(0)
+    _write_object(bucket=bucket, key=key, buffer=buffer)
+
+
 def read_json(bucket: str, key: str) -> Union[Any, Dict[str, Any]]:
     """Read a json object from a given s3 bucket and key.
 
@@ -284,7 +318,7 @@ def file_keys_in_bucket(
         A List of S3 file keys.
 
     """
-    s3_client = _get_boto_session().client("s3")
+    s3_client = boto3.Session().client("s3")
     response = s3_client.list_objects_v2(Bucket=bucket, Prefix=key)
     contents = response.get("Contents", [])
 
@@ -312,7 +346,7 @@ def file_exists_in_bucket(bucket: str, key: str) -> bool:
         If boto3 fails to retrieve the file metadata.
 
     """
-    s3_client = _get_boto_session().client("s3")
+    s3_client = boto3.Session().client("s3")
     try:
         _ = s3_client.head_object(Bucket=bucket, Key=key)
         return True
@@ -348,7 +382,7 @@ def file_size(bucket: str, key: str, raw_size: bool = False) -> Union[str, Any]:
         If file doesn't exist.
 
     """
-    s3_client = _get_boto_session().client("s3")
+    s3_client = boto3.Session().client("s3")
     try:
         file = s3_client.head_object(Bucket=bucket, Key=key)
         content_length = file["ContentLength"]
