@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "talus-aws-utils"
-version = "0.0.7"
+version = "0.0.8"
 description = "Talus AWS Utils"
 authors = ["Rico Meinl <rmeinl@talus.bio>"]
 license = "MIT"

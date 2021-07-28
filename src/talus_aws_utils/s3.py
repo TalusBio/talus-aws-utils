@@ -1,5 +1,6 @@
 """src/talus_aws_utils/s3.py module."""
 import json
+import os
 import pathlib
 import pickle
 
@@ -321,8 +322,11 @@ def file_keys_in_bucket(
     s3_client = boto3.Session().client("s3")
     response = s3_client.list_objects_v2(Bucket=bucket, Prefix=key)
     contents = response.get("Contents", [])
-
-    return [obj.get("Key") for obj in contents if obj["Key"].endswith(file_type)]
+    return [
+        obj.get("Key")
+        for obj in contents
+        if os.path.splitext(obj["Key"])[1] and obj["Key"].endswith(file_type)
+    ]
 
 
 def file_exists_in_bucket(bucket: str, key: str) -> bool:
