@@ -320,13 +320,18 @@ def file_keys_in_bucket(
 
     """
     s3_client = boto3.Session().client("s3")
-    response = s3_client.list_objects_v2(Bucket=bucket, Prefix=key)
-    contents = response.get("Contents", [])
-    return [
-        obj.get("Key")
-        for obj in contents
-        if os.path.splitext(obj["Key"])[1] and obj["Key"].endswith(file_type)
-    ]
+    keys_left = True
+    keys = []
+    while keys_left:
+        start_tkn = keys[-1] if keys else ""
+        response = s3_client.list_objects_v2(
+            Bucket=bucket, Prefix=key, StartAfter=start_tkn
+        )
+        contents = response.get("Contents", [])
+        keys_left = contents != []
+        keys += [obj.get("Key") for obj in contents]
+
+    return [k for k in keys if os.path.splitext(k)[1] and k.endswith(file_type)]
 
 
 def file_exists_in_bucket(bucket: str, key: str) -> bool:
